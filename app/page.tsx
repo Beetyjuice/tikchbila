@@ -1,15 +1,13 @@
 'use client';
 
 import Header from '@/components/Header';
-import HeroSection from '@/components/HeroSection';
 import OctagonalHub from '@/components/OctagonalHub';
 import Footer from '@/components/Footer';
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen flex flex-col bg-[#F5F0E8]">
       <Header />
-      <HeroSection />
       <OctagonalHub />
       <Footer />
     </main>

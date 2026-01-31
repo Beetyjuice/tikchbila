@@ -1,104 +1,89 @@
 'use client';
 
 import { useState } from 'react';
-import { Menu, X, Search, User } from 'lucide-react';
+import { Globe, Menu, X } from 'lucide-react';
 
 export default function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [language, setLanguage] = useState<'en' | 'ar' | 'fr'>('en');
+  const [language, setLanguage] = useState<'en' | 'ar' | 'fr'>('fr');
+  const [langOpen, setLangOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  const navItems = {
-    en: ['Home', 'Search', 'About', 'Contact'],
-    ar: ['الرئيسية', 'البحث', 'حول المنصة', 'اتصل بنا'],
-    fr: ['Accueil', 'Recherche', 'À Propos', 'Contact'],
-  };
-
-  const labels = {
-    en: { title: 'Moroccan Scientific Platform', subtitle: 'Scientific Research Hub' },
-    ar: { title: 'المنصة العلمية المغربية', subtitle: 'منصة البحث العلمي' },
-    fr: { title: 'Plateforme Scientifique Marocaine', subtitle: 'Hub de Recherche Scientifique' },
-  };
+  const langLabels = { en: 'English', ar: 'العربية', fr: 'Français' };
 
   return (
-    <header className="sticky top-0 z-50 bg-muted border-b-4 border-primary">
+    <header className="sticky top-0 z-50 bg-[#F5F0E8] border-b border-[#C5B8A8]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xl">
-              ✦
-            </div>
-            <div>
-              <h1 className="text-base md:text-lg font-bold text-primary">{labels[language].title}</h1>
-              <p className="text-xs text-foreground hidden sm:block">{labels[language].subtitle}</p>
-            </div>
+          <div className="flex items-center gap-2">
+            <svg width="32" height="32" viewBox="0 0 40 40" className="flex-shrink-0">
+              <polygon
+                points="20,2 26,8 26,16 20,22 14,16 14,8"
+                fill="#2C4E5C"
+                transform="rotate(0,20,20)"
+              />
+              <polygon
+                points="20,2 26,8 26,16 20,22 14,16 14,8"
+                fill="#A0563D"
+                transform="rotate(90,20,20)"
+              />
+              <polygon
+                points="20,2 26,8 26,16 20,22 14,16 14,8"
+                fill="#2C4E5C"
+                transform="rotate(180,20,20)"
+              />
+              <polygon
+                points="20,2 26,8 26,16 20,22 14,16 14,8"
+                fill="#A0563D"
+                transform="rotate(270,20,20)"
+              />
+              <circle cx="20" cy="20" r="5" fill="#F5F0E8" />
+            </svg>
+            <span className="text-xl font-bold text-[#2C4E5C] tracking-wide">ADOAH</span>
+            <span className="hidden sm:inline text-xs text-[#A0563D] ml-1">
+              North African Diamond Open Access Hub
+            </span>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
-            {navItems[language].map((item, idx) => (
-              <a
-                key={idx}
-                href="#"
-                className="text-sm font-medium text-foreground hover:text-primary transition-colors"
-              >
-                {item}
-              </a>
-            ))}
-          </nav>
-
-          {/* Right Actions */}
-          <div className="flex items-center gap-4">
-            <button className="p-2 hover:bg-muted rounded-lg transition-colors" aria-label="Search">
-              <Search size={20} className="text-foreground" />
-            </button>
-
+          {/* Right side */}
+          <div className="flex items-center gap-3">
             {/* Language Selector */}
-            <div className="hidden sm:flex items-center gap-2 px-3 py-2 bg-white rounded-lg border-2 border-primary">
-              {(['en', 'ar', 'fr'] as const).map((lang) => (
-                <button
-                  key={lang}
-                  onClick={() => setLanguage(lang)}
-                  className={`px-2 py-1 rounded text-xs font-semibold transition-colors ${
-                    language === lang
-                      ? 'bg-primary text-white'
-                      : 'text-foreground hover:text-primary'
-                  }`}
-                >
-                  {lang.toUpperCase()}
-                </button>
-              ))}
+            <div className="relative">
+              <button
+                onClick={() => setLangOpen(!langOpen)}
+                className="flex items-center gap-2 px-3 py-1.5 rounded border border-[#A0563D] text-sm text-[#A0563D] hover:bg-[#A0563D]/10 transition-colors"
+              >
+                <Globe size={16} />
+                <span className="hidden sm:inline">{langLabels[language]}</span>
+                <span className="sm:hidden">{language.toUpperCase()}</span>
+              </button>
+              {langOpen && (
+                <div className="absolute right-0 mt-1 bg-white rounded shadow-lg border border-[#C5B8A8] overflow-hidden z-50">
+                  {(['en', 'ar', 'fr'] as const).map((lang) => (
+                    <button
+                      key={lang}
+                      onClick={() => { setLanguage(lang); setLangOpen(false); }}
+                      className={`block w-full text-left px-4 py-2 text-sm hover:bg-[#F5F0E8] transition-colors ${
+                        language === lang ? 'bg-[#2C4E5C] text-white' : 'text-[#3D3D3D]'
+                      }`}
+                    >
+                      {langLabels[lang]}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
-            <button className="p-2 hover:bg-muted rounded-lg transition-colors" aria-label="User Account">
-              <User size={20} className="text-foreground" />
-            </button>
-
-            {/* Mobile Menu Toggle */}
+            {/* Mobile menu */}
             <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2"
-              aria-label="Toggle Menu"
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="sm:hidden p-2 text-[#2C4E5C]"
+              aria-label="Toggle menu"
             >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {menuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
-
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <nav className="md:hidden pb-4 space-y-2">
-            {navItems[language].map((item, idx) => (
-              <a
-                key={idx}
-                href="#"
-                className="block px-4 py-2 text-sm font-medium text-foreground hover:bg-muted rounded-lg transition-colors"
-              >
-                {item}
-              </a>
-            ))}
-          </nav>
-        )}
       </div>
     </header>
   );
